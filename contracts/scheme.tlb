@@ -1,9 +1,7 @@
 // Event queries
-open#01fa8449 outcome:Uint8 = InternalMsgBody;
-payout_request#57f28142 player:MsgAddressInt outcome:Uint8 = InternalMsgBody;
-
-// Event responses
-payout_response#cf5609f5 success:Bool = InternalMsgBody;
+bet#5d180636 outcome:uint8 amount:uint256 = InternalMsgBody;
+process_bet#45d8664 player:MsgAddressInt outcome:uint8 amount:uint256 = InternalMsgBody;
 
 // Bet queries
 close#12d4de36 = InternalMsgBody;
+deposit#49d59d40 amount:uint256 = InternalMsgBody;

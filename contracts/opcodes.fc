@@ -1,4 +1,4 @@
-int op::open () inline asm "0x01fa8449 INT";
+int op::bet () inline asm "0x5d180636 INT";
+int op::process_bet () inline asm "0x45d8664 INT";
 int op::close () inline asm "0x12d4de36 INT";
-int op::payout_request () inline asm "0x57f28142 INT";
-int op::payout_response () inline asm "0xcf5609f5 INT";
+int op::deposit () inline asm "0x49d59d40 INT";
