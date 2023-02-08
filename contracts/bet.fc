@@ -1,17 +1,17 @@
 {-
-    storage#_ owner:MsgAddressInt event:MsgAddressInt outcome:uint8 amount:uint256 = Storage;
+    storage#_ owner:MsgAddressInt event:MsgAddressInt outcome:Bool amount:uint256 = Storage;
 -}
 
 (slice, slice, int, int) load_data () inline {
     slice ds = get_data().begin_parse();
-    return (ds~load_msg_addr(), ds~load_msg_addr(), ds~load_uint(8), ds~load_uint(256));
+    return (ds~load_msg_addr(), ds~load_msg_addr(), ds~load_uint(1), ds~load_uint(256));
 }
 
 () save_data (slice owner, slice event, int outcome, int amount) impure {
     set_data(begin_cell()
         .store_slice(owner)
         .store_slice(event)
-        .store_uint(outcome, 8)
+        .store_uint(outcome, 1)
         .store_uint(amount, 256)
     .end_cell());
 }
@@ -37,7 +37,7 @@
             .store_uint(0, 1 + 4 + 4 + 64 + 32 + 1 + 1)
             .store_uint(op::process_bet(), 32)
             .store_slice(owner)
-            .store_uint(outcome, 8)
+            .store_uint(outcome, 1)
             .store_uint(amount, 256)
         .end_cell(), 128);
     }
