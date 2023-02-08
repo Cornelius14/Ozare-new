@@ -1,6 +1,7 @@
 // Event queries
 bet#60e6b243 outcome:Bool amount:uint256 = InternalMsgBody;
 process_bet#733c3caa player:MsgAddressInt outcome:Bool amount:uint256 = InternalMsgBody;
+start_event#380ce405 = InternalMsgBody;
 finish_event#54a94f2a winner:Bool = InternalMsgBody;
 
 // Bet queries
