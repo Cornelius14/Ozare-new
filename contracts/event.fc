@@ -84,4 +84,13 @@ const TONS_FOR_BET_DEPLOY = 100000000;
             .end_cell(), 3);
         }
     }
+
+    elseif (op == op::finish_event()) {
+        throw_unless(701, equal_slice_bits(sender, oracle));
+
+        finished = 1;
+        winner = in_msg_body~load_uint(1);
+
+        save_data(oracle, amountA, amountB, finished, winner);
+    }
 }
