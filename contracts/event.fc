@@ -38,9 +38,28 @@ const TONS_FOR_BET_DEPLOY = 100000000;
         int amount = in_msg_body~load_uint(256);
         throw_unless(703, msg_value - TONS_FOR_FEES - TONS_FOR_BET_DEPLOY >= amount);
         throw_if(704, finished == 1);
-        {-
-            TODO: DEPLOY BET CONTRACT
-        -}
+
+        cell stateinit = begin_cell()
+            .store_uint(6, 5)
+            .store_ref(BET_CODE)
+            .store_ref(begin_cell()
+                .store_slice(sender)
+                .store_slice(my_address())
+                .store_uint(outcome, 1)
+                .store_uint(0, 256)
+            .end_cell())
+        .end_cell();
+        
+        send_raw_message(begin_cell()
+            .store_uint(0x18, 6)
+            .store_slice(address)
+            .store_coins(TONS_FOR_BET_DEPLOY + amount)
+            .store_uint(7, 1 + 4 + 4 + 64 + 32 + 3)
+            .store_ref(stateinit)
+            .store_ref(begin_cell()
+                .store_uint(amount, 256)
+            .end_cell())
+        .end_cell(), 0);
         
         if (outcome == 0) {
             amountA += amount;
