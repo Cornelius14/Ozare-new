@@ -1,8 +1,8 @@
 // Event queries
-bet outcome:Bool amount:uint256 = InternalMsgBody;
-process_bet player:MsgAddressInt outcome:Bool amount:uint256 = InternalMsgBody;
-finish_event winner:Bool = InternalMsgBody;
+bet#60e6b243 outcome:Bool amount:uint256 = InternalMsgBody;
+process_bet#733c3caa player:MsgAddressInt outcome:Bool amount:uint256 = InternalMsgBody;
+finish_event#54a94f2a winner:Bool = InternalMsgBody;
 
 // Bet queries
-close = InternalMsgBody;
-deposit amount:uint256 = InternalMsgBody;
+close#12d4de36 = InternalMsgBody;
+deposit#49d59d40 amount:uint256 = InternalMsgBody;

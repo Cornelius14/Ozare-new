@@ -28,21 +28,21 @@
 
     int op = in_msg_body~load_uint(32);
 
-    if (op == op::close()) {
+    if (op == op::close) {
         throw_unless(701, equal_slice_bits(sender, owner)); ;; only allow owner to close the bet
         send_raw_message(begin_cell()
             .store_uint(0x18, 6)
             .store_slice(event)
             .store_coins(0)
             .store_uint(0, 1 + 4 + 4 + 64 + 32 + 1 + 1)
-            .store_uint(op::process_bet(), 32)
+            .store_uint(op::process_bet, 32)
             .store_slice(owner)
             .store_uint(outcome, 1)
             .store_uint(amount, 256)
         .end_cell(), 128);
     }
     
-    elseif (op == op::deposit()) {
+    elseif (op == op::deposit) {
         throw_unless(701, equal_slice_bits(sender, event)); ;; only allow event contract to deposit funds
         amount += in_msg_body~load_uint(256);
         save_data(owner, event, outcome, amount);

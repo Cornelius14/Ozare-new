@@ -1,4 +1,5 @@
-int op::bet () inline asm "0x5d180636 INT";
-int op::process_bet () inline asm "0x45d8664 INT";
-int op::close () inline asm "0x12d4de36 INT";
-int op::deposit () inline asm "0x49d59d40 INT";
+const int op::bet = 0x60e6b243;
+const int op::process_bet = 0x733c3caa;
+const int op::finish_event = 0x54a94f2a;
+const int op::close = 0x12d4de36;
+const int op::deposit = 0x49d59d40;
