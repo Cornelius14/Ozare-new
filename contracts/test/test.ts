@@ -1,16 +1,21 @@
 import { ContractSystem } from 'ton-emulator'
-import { Contract, contractAddress, OpenedContract, toNano, CommonMessageInfoInternal } from 'ton-core'
+import { Contract, contractAddress, OpenedContract, toNano, CommonMessageInfoInternal, Address } from 'ton-core'
 import { expect } from 'chai'
 import { Bet } from '../wrappers/Bet'
 import { Event } from '../wrappers/Event'
 import { Treasure } from 'ton-emulator/dist/treasure/Treasure'
 
+function parseIntAddress (address: bigint): Address {
+    return Address.parseRaw('0:' + address.toString(16))
+}
+
 describe('ozare contracts', () => {
     var system: ContractSystem
     var oracle: Treasure
     var players: Treasure[] = []
+    var uid: number = 0
 
-    beforeEach(async () => {
+    before(async () => {
         system = await ContractSystem.create()
         oracle = await system.treasure('oracle')
         for (let i = 0; i < 10; i += 1) {
@@ -19,7 +24,7 @@ describe('ozare contracts', () => {
     })
 
     it('should accept bets', async () => {
-        const event = await Event.create(system, oracle.address)
+        const event = await Event.create(system, oracle.address, uid++)
         await event.bet(players[0], false, toNano('1'))
         let txs = await system.run()
         expect(txs).to.have.lengthOf(4)
@@ -36,8 +41,88 @@ describe('ozare contracts', () => {
             expect(txs[3].inMessage?.info.value.coins).to.equal(49000000n)
         }
 
+        await event.bet(players[0], false, toNano('3'))
+        txs = await system.run()
+        expect(txs).to.have.lengthOf(4)
+        expect(txs[2].endStatus).to.equal('active')
+        if (txs[3].inMessage?.info.type == 'internal') {
+            expect(txs[3].inMessage?.info.value.coins).to.equal(49000000n)
+        }
+
         const [amountA, amountB] = await event.getTotalBets()
-        expect(amountA).to.be.equal(toNano('1'))
+        expect(amountA).to.be.equal(toNano('4'))
         expect(amountB).to.be.equal(toNano('2'))
+    })
+
+    it('should start event', async () => {
+        const event = await Event.create(system, oracle.address, uid++)
+        await event.startEvent(oracle)
+        let txs = await system.run()
+        expect(txs).to.have.lengthOf(3)
+        if (txs[1].description.type == 'generic') {
+            expect(txs[1].description.aborted).to.be.false
+        }
+        expect(await event.getStartedFinished()).to.eql([true, false])
+    })
+
+    it('should finish event', async () => {
+        const event = await Event.create(system, oracle.address, uid++)
+        await event.startEvent(oracle)
+        await system.run()
+        await event.finishEvent(oracle, true)
+        let txs = await system.run()
+        expect(txs).to.have.lengthOf(3)
+        if (txs[1].description.type == 'generic') {
+            expect(txs[1].description.aborted).to.be.false
+        }
+        expect(await event.getStartedFinished()).to.eql([true, true])
+    })
+
+    it('should payout winnings', async () => {
+        const event = await Event.create(system, oracle.address, uid++)
+        await event.bet(players[0], false, toNano('1'))
+        await event.bet(players[1], true, toNano('2'))
+        await event.bet(players[2], true, toNano('1'))
+        await event.bet(players[1], false, toNano('1'))
+
+        let txs = await system.run()
+        expect(txs).to.have.lengthOf(16)
+        const deployTxs = txs.filter(tx => tx.oldStatus == 'uninitialized' && tx.endStatus == 'active' && tx.outMessagesCount == 0)
+        const betAddresses = deployTxs.map(tx => parseIntAddress(tx.address))
+        const bets = betAddresses.map(addr => new Bet(addr, system.contract(addr)))
+        expect(bets).to.have.lengthOf(4)
+
+        const [amountA, amountB] = await event.getTotalBets()
+        expect(amountA).to.be.equal(toNano('2'))
+        expect(amountB).to.be.equal(toNano('3'))
+
+        await event.startEvent(oracle)
+        await event.finishEvent(oracle, false)
+        await system.run()
+
+        await bets[0].close(players[0])
+        txs = await system.run()
+        expect(txs).to.have.lengthOf(4)
+        if (txs[3].inMessage?.info.type == 'internal') {
+            expect(Number(txs[3].inMessage?.info.value.coins)).to.be.gte(2.5e9)
+        }
+
+        await bets[1].close(players[1])
+        txs = await system.run()
+        expect(txs).to.have.lengthOf(4)
+
+        await bets[2].close(players[2])
+        txs = await system.run()
+        expect(txs).to.have.lengthOf(4)
+
+        await bets[3].close(players[1])
+        txs = await system.run()
+        expect(txs).to.have.lengthOf(4)
+        if (txs[3].inMessage?.info.type == 'internal') {
+            expect(Number(txs[3].inMessage?.info.value.coins)).to.be.gte(2.5e9)
+        }
+
+        expect(bets.map(b => b.executor.balance)).to.eql([0n, 0n, 0n, 0n])
+        expect(Number(event.executor.balance)).to.be.approximately(0.36e9, 0.1e9)
     })
 })

@@ -16,8 +16,8 @@ export class Event implements Contract {
         this.executor = executor
     }
 
-    static async create (system: ContractSystem, oracle: Address): Promise<Event> {
-        const stateInit = await this.getStateInit(oracle)
+    static async create (system: ContractSystem, oracle: Address, uid: number): Promise<Event> {
+        const stateInit = await this.getStateInit(oracle, uid)
         const address = contractAddress(0, stateInit)
         return new Event(address, stateInit, system.contract(address))
     }
@@ -29,20 +29,6 @@ export class Event implements Contract {
             value: amount + toNano('0.25'),
             body: beginCell()
                 .storeUint(0x60e6b243, 32)
-                .storeBit(outcome)
-                .storeUint(amount, 256)
-            .endCell()
-        })
-    }
-
-    async processBet (via: Sender, player: Address, outcome: boolean, amount: bigint) {
-        await via.send({
-            to: this.address,
-            init: this.init,
-            value: toNano('0.05'),
-            body: beginCell()
-                .storeUint(0x733c3caa, 32)
-                .storeAddress(player)
                 .storeBit(outcome)
                 .storeUint(amount, 256)
             .endCell()
@@ -103,10 +89,11 @@ export class Event implements Contract {
         return Cell.fromBoc(Buffer.from(result.codeBoc, 'base64'))[0]
     }
 
-    static async getStateInit (oracle: Address): Promise<{ code: Cell, data: Cell }> {
+    static async getStateInit (oracle: Address, uid: number): Promise<{ code: Cell, data: Cell }> {
         return {
             code: await this.getCode(),
             data: beginCell()
+                .storeUint(uid, 128)
                 .storeAddress(oracle)
                 .storeUint(0, 515)
                 .storeRef(await Bet.getCode())

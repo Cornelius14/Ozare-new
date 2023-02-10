@@ -15,7 +15,7 @@ export class Bet implements Contract {
     async close (via: Sender) {
         await via.send({
             to: this.address,
-            value: toNano('0.05'),
+            value: toNano('0.25'),
             body: beginCell()
                 .storeUint(0x12d4de36, 32)
             .endCell()
