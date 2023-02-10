@@ -48,3 +48,23 @@
         save_data(owner, event, outcome, amount);
     }
 }
+
+slice get_owner () method_id {
+    (slice owner, _, _, _) = load_data();
+    return owner;
+}
+
+slice get_event () method_id {
+    (_, slice event, _, _) = load_data();
+    return event;
+}
+
+int get_outcome () method_id {
+    (_, _, int outcome, _) = load_data();
+    return outcome;
+}
+
+int get_amount () method_id {
+    (_, _, _, int amount) = load_data();
+    return amount;
+}

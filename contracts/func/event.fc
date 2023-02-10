@@ -88,9 +88,9 @@ slice get_contract_address (cell state_init) inline {
         send_raw_message(begin_cell()
             .store_uint(0x18, 6)
             .store_slice(sender)
-            .store_coins(0)
+            .store_coins(msg_value - TONS_FOR_FEES - TONS_FOR_BET_DEPLOY - amount)
             .store_uint(0, 1 + 4 + 4 + 64 + 32 + 1 + 1)
-        .end_cell(), 64);
+        .end_cell(), 0);
     }
     
     elseif (op == op::process_bet) {
@@ -133,4 +133,19 @@ slice get_contract_address (cell state_init) inline {
     }
 
     save_data(oracle, amountA, amountB, started, finished, winner, bet_code);
+}
+
+[int, int] get_total_bets () method_id {
+    (_, int amountA, int amountB, _, _, _, _) = load_data();
+    return [amountA, amountB];
+}
+
+[int, int] get_started_finished () method_id {
+    (_, _, _, int started, int finished, _, _) = load_data();
+    return [started, finished];
+}
+
+int get_winner () method_id {
+    (_, _, _, _, _, int winner, _) = load_data();
+    return winner;
 }
