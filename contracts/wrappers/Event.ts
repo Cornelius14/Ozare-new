@@ -83,6 +83,15 @@ export class Event implements Contract {
         return [t.readBigNumber(), t.readBigNumber()]
     }
 
+    async getStartedFinished () {
+        const t = (await this.runGetMethod('get_started_finished')).readTuple()
+        return [t.readBoolean(), t.readBoolean()]
+    }
+
+    async getWinner () {
+        return (await this.runGetMethod('get_winner')).readBoolean()
+    }
+
     static async getCode (): Promise<Cell> {
         let result = await compileFunc({
             targets: ['stdlib.fc', 'opcodes.fc', 'event.fc'],

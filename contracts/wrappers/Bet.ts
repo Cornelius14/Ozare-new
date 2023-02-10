@@ -32,6 +32,18 @@ export class Bet implements Contract {
         return (await this.runGetMethod('get_owner')).readAddress()
     }
 
+    async getEvent () {
+        return (await this.runGetMethod('get_event')).readAddress()
+    }
+    
+    async getOutcome () {
+        return (await this.runGetMethod('get_outcome')).readBoolean()
+    }
+
+    async getAmount () {
+        return (await this.runGetMethod('get_amount')).readBigNumber()
+    }
+
     static async getCode (): Promise<Cell> {
         let result = await compileFunc({
             targets: ['stdlib.fc', 'opcodes.fc', 'bet.fc'],
