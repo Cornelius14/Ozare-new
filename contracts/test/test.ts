@@ -25,6 +25,7 @@ describe('ozare contracts', () => {
 
     it('should accept bets', async () => {
         const event = await Event.create(system, oracle.address, uid++)
+
         await event.bet(players[0], false, toNano('1'))
         let txs = await system.run()
         expect(txs).to.have.lengthOf(4)
@@ -124,5 +125,28 @@ describe('ozare contracts', () => {
 
         expect(bets.map(b => b.executor.balance)).to.eql([0n, 0n, 0n, 0n])
         expect(Number(event.executor.balance)).to.be.approximately(0.36e9, 0.1e9)
+    })
+
+    it('should not accept bets after the start', async () => {
+        const event = await Event.create(system, oracle.address, uid++)
+
+        await event.bet(players[0], false, toNano('1'))
+        let txs = await system.run()
+        expect(txs).to.have.lengthOf(4)
+        expect(txs[2].endStatus).to.equal('active')
+        if (txs[3].inMessage?.info.type == 'internal') {
+            expect(txs[3].inMessage?.info.value.coins).to.equal(49000000n)
+        }
+
+        await event.startEvent(oracle)
+        await system.run()
+
+        await event.bet(players[0], false, toNano('1'))
+        txs = await system.run()
+        expect(txs).to.have.lengthOf(3)
+
+        const [amountA, amountB] = await event.getTotalBets()
+        expect(amountA).to.be.equal(toNano('1'))
+        expect(amountB).to.be.equal(toNano('0'))
     })
 })
