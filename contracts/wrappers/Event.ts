@@ -1,22 +1,25 @@
-import { Address, beginCell, Cell, Contract, ContractABI, contractAddress, ContractProvider, Sender, toNano } from 'ton-core'
+import { Address, beginCell, Cell, Contract, ContractABI, contractAddress, ContractProvider, Sender, toNano, TupleItem } from 'ton-core'
 import { compileFunc } from '@ton-community/func-js'
 import { readFileSync } from 'fs';
 import { Bet } from './Bet'
 import { ContractExecutor } from 'ton-emulator/dist/emulator/ContractExecutor';
+import { ContractSystem } from 'ton-emulator/dist/emulator/ContractSystem';
 
 export class Event implements Contract {
     readonly address: Address
     readonly init: { code: Cell; data: Cell }
+    readonly executor: ContractExecutor
 
-    constructor (address: Address, init: { code: Cell; data: Cell }) {
+    constructor (address: Address, init: { code: Cell; data: Cell }, executor: ContractExecutor) {
         this.address = address
         this.init = init
+        this.executor = executor
     }
 
-    static async create (oracle: Address): Promise<Event> {
+    static async create (system: ContractSystem, oracle: Address): Promise<Event> {
         const stateInit = await this.getStateInit(oracle)
         const address = contractAddress(0, stateInit)
-        return new Event(address, stateInit)
+        return new Event(address, stateInit, system.contract(address))
     }
 
     async bet (via: Sender, outcome: boolean, amount: bigint) {
@@ -69,10 +72,14 @@ export class Event implements Contract {
         })
     }
 
-    async getTotalBets (executor: ContractExecutor) {
-        var res = await executor.get('get_total_bets')
+    private async runGetMethod (method: string, stack?: TupleItem[] | undefined) {
+        var res = await this.executor.get(method)
         if (!res.success) throw(res.error)
-        const t = res.stack.readTuple()
+        return res.stack
+    }
+
+    async getTotalBets () {
+        const t = (await this.runGetMethod('get_total_bets')).readTuple()
         return [t.readBigNumber(), t.readBigNumber()]
     }
 

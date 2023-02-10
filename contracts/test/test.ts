@@ -19,7 +19,7 @@ describe('ozare contracts', () => {
     })
 
     it('should accept bets', async () => {
-        const event = await Event.create(oracle.address)
+        const event = await Event.create(system, oracle.address)
         await event.bet(players[0], false, toNano('1'))
         let txs = await system.run()
         expect(txs).to.have.lengthOf(4)
@@ -36,7 +36,7 @@ describe('ozare contracts', () => {
             expect(txs[3].inMessage?.info.value.coins).to.equal(49000000n)
         }
 
-        const [amountA, amountB] = await event.getTotalBets(system.contract(event.address))
+        const [amountA, amountB] = await event.getTotalBets()
         expect(amountA).to.be.equal(toNano('1'))
         expect(amountB).to.be.equal(toNano('2'))
     })

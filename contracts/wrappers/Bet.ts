@@ -1,12 +1,20 @@
-import { Address, beginCell, Cell, Contract, ContractProvider, Sender, StateInit, toNano } from 'ton-core'
+import { Address, beginCell, Cell, Contract, ContractProvider, Sender, StateInit, toNano, TupleItem } from 'ton-core'
 import { compileFunc } from '@ton-community/func-js'
-import { readFileSync } from 'fs';
+import { readFileSync } from 'fs'
+import { ContractExecutor } from 'ton-emulator/dist/emulator/ContractExecutor'
 
 export class Bet implements Contract {
-    constructor (readonly address: Address) {}
+    readonly address: Address
+    readonly executor: ContractExecutor
 
-    async close (provider: ContractProvider, via: Sender) {
-        await provider.internal(via, {
+    constructor (address: Address, executor: ContractExecutor) {
+        this.address = address
+        this.executor = executor
+    }
+
+    async close (via: Sender) {
+        await via.send({
+            to: this.address,
             value: toNano('0.05'),
             body: beginCell()
                 .storeUint(0x12d4de36, 32)
@@ -14,14 +22,14 @@ export class Bet implements Contract {
         })
     }
 
-    async deposit (provider: ContractProvider, via: Sender, params: { amount: bigint }) {
-        await provider.internal(via, {
-            value: toNano('0.05'),
-            body: beginCell()
-                .storeUint(0x49d59d40, 32)
-                .storeUint(params.amount, 256)
-            .endCell()
-        })
+    private async runGetMethod (method: string, stack?: TupleItem[] | undefined) {
+        var res = await this.executor.get(method)
+        if (!res.success) throw(res.error)
+        return res.stack
+    }
+
+    async getOwner () {
+        return (await this.runGetMethod('get_owner')).readAddress()
     }
 
     static async getCode (): Promise<Cell> {
