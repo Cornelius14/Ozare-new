@@ -220,4 +220,22 @@ describe('ozare contracts', () => {
         }
         expect(await event.getStartedFinished()).to.eql([true, false])
     })
+
+    it('should not close the bet if caller is not owner', async () => {
+        const event = await Event.create(system, oracle.address, uid++)
+
+        await event.bet(players[0], false, toNano('1'))
+        await event.bet(players[1], true, toNano('1'))
+
+        let txs = await system.run()
+        const deployTxs = txs.filter(tx => tx.oldStatus == 'uninitialized' && tx.endStatus == 'active' && tx.outMessagesCount == 0)
+        const betAddresses = deployTxs.map(tx => parseIntAddress(tx.address))
+        const bets = betAddresses.map(addr => new Bet(addr, system.contract(addr)))
+        
+        await bets[0].close(players[1])
+        txs = await system.run()
+        if (txs[1].description.type == 'generic') {
+            expect(txs[1].description.aborted).to.be.true
+        }
+    })
 })
