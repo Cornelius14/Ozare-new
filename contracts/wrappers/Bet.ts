@@ -1,7 +1,7 @@
-import { Address, beginCell, Cell, Contract, ContractProvider, Sender, StateInit, toNano, TupleItem } from 'ton-core'
+import { Address, beginCell, Cell, Contract, Sender, toNano, TupleItem } from 'ton-core'
 import { compileFunc } from '@ton-community/func-js'
 import { readFileSync } from 'fs'
-import { ContractExecutor } from 'ton-emulator/dist/emulator/ContractExecutor'
+import { ContractExecutor } from 'ton-emulator'
 
 export class Bet implements Contract {
     readonly address: Address

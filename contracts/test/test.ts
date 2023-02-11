@@ -1,9 +1,9 @@
 import { ContractSystem } from 'ton-emulator'
-import { Contract, contractAddress, OpenedContract, toNano, CommonMessageInfoInternal, Address } from 'ton-core'
+import { toNano, Address } from 'ton-core'
 import { expect } from 'chai'
+import { Treasure } from 'ton-emulator'
 import { Bet } from '../wrappers/Bet'
 import { Event } from '../wrappers/Event'
-import { Treasure } from 'ton-emulator/dist/treasure/Treasure'
 
 function parseIntAddress (address: bigint): Address {
     return Address.parseRaw('0:' + address.toString(16))
