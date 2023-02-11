@@ -4,22 +4,40 @@ import { readFileSync } from 'fs';
 import { Bet } from './Bet'
 import { ContractExecutor } from 'ton-emulator/dist/emulator/ContractExecutor';
 import { ContractSystem } from 'ton-emulator/dist/emulator/ContractSystem';
+import { TonClient } from 'ton';
+import { GetMethodResult } from 'ton-emulator/dist/bindings/EmulatorBindings';
 
 export class Event implements Contract {
     readonly address: Address
     readonly init: { code: Cell; data: Cell }
-    readonly executor: ContractExecutor
+    readonly executor?: ContractExecutor
+    readonly client?: TonClient
 
-    constructor (address: Address, init: { code: Cell; data: Cell }, executor: ContractExecutor) {
+    constructor (address: Address, init: { code: Cell; data: Cell }, executor: ContractExecutor | TonClient) {
         this.address = address
         this.init = init
-        this.executor = executor
+        if ('get' in executor) {
+            this.executor = executor
+        } else {
+            this.client = executor
+        }
     }
 
-    static async create (system: ContractSystem, oracle: Address, uid: number): Promise<Event> {
+    static async create (system: ContractSystem | TonClient, oracle: Address, uid: number): Promise<Event> {
         const stateInit = await this.getStateInit(oracle, uid)
         const address = contractAddress(0, stateInit)
-        return new Event(address, stateInit, system.contract(address))
+        if ('contract' in system) {
+            return new Event(address, stateInit, system.contract(address))
+        }
+        return new Event(address, stateInit, system)
+    }
+
+    async deploy (via: Sender) {
+        await via.send({
+            to: this.address,
+            init: this.init,
+            value: toNano('0.25')
+        })
     }
 
     async bet (via: Sender, outcome: boolean, amount: bigint) {
@@ -59,8 +77,13 @@ export class Event implements Contract {
     }
 
     private async runGetMethod (method: string, stack?: TupleItem[] | undefined) {
-        var res = await this.executor.get(method)
-        if (!res.success) throw(res.error)
+        var res
+        if (this.executor) {
+            res = await this.executor.get(method)
+            if (!res.success) throw(res.error)
+        } else {
+            res = await this.client!.callGetMethod(this.address, method, stack)
+        }
         return res.stack
     }
 

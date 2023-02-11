@@ -124,7 +124,7 @@ describe('ozare contracts', () => {
         }
 
         expect(bets.map(b => b.executor.balance)).to.eql([0n, 0n, 0n, 0n])
-        expect(Number(event.executor.balance)).to.be.approximately(0.36e9, 0.1e9)
+        expect(Number(event.executor!.balance)).to.be.approximately(0.36e9, 0.1e9)
     })
 
     it('should not accept bets after the start', async () => {
