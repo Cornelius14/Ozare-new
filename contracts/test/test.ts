@@ -149,4 +149,75 @@ describe('ozare contracts', () => {
         expect(amountA).to.be.equal(toNano('1'))
         expect(amountB).to.be.equal(toNano('0'))
     })
+
+    it('should not payout winnings before the end', async () => {
+        const event = await Event.create(system, oracle.address, uid++)
+
+        await event.bet(players[0], false, toNano('1'))
+        await event.bet(players[1], true, toNano('2'))
+        await event.bet(players[2], true, toNano('1'))
+        await event.bet(players[1], false, toNano('1'))
+
+        let txs = await system.run()
+        expect(txs).to.have.lengthOf(16)
+        const deployTxs = txs.filter(tx => tx.oldStatus == 'uninitialized' && tx.endStatus == 'active' && tx.outMessagesCount == 0)
+        const betAddresses = deployTxs.map(tx => parseIntAddress(tx.address))
+        const bets = betAddresses.map(addr => new Bet(addr, system.contract(addr)))
+        expect(bets).to.have.lengthOf(4)
+
+        await bets[0].close(players[0])
+        txs = await system.run()
+        if (txs[3].inMessage?.info.type == 'internal') {
+            expect(txs[3].inMessage.info.bounced).to.be.true
+        }
+
+        await event.startEvent(oracle)
+        await system.run()
+
+        await bets[0].close(players[0])
+        txs = await system.run()
+        if (txs[3].inMessage?.info.type == 'internal') {
+            expect(txs[3].inMessage.info.bounced).to.be.true
+        }
+
+        await event.finishEvent(oracle, true)
+        await system.run()
+
+        await bets[0].close(players[0])
+        txs = await system.run()
+        if (txs[3].inMessage?.info.type == 'internal') {
+            expect(txs[3].inMessage.info.bounced).to.be.false
+            expect(txs[3].inMessage.info.dest.toRawString()).to.equal(players[0].address.toRawString())
+        }
+
+        await bets[1].close(players[1])
+        txs = await system.run()
+        if (txs[3].inMessage?.info.type == 'internal') {
+            expect(txs[3].inMessage.info.bounced).to.be.false
+            expect(txs[3].inMessage.info.dest.toRawString()).to.equal(players[1].address.toRawString())
+            expect(Number(txs[3].inMessage.info.value.coins)).to.be.approximately(3.6e9, 0.1e9)
+        }
+    })
+
+    it('should not start event if caller is not oracle', async () => {
+        const event = await Event.create(system, oracle.address, uid++)
+        await event.startEvent(players[0])
+        let txs = await system.run()
+        if (txs[2].inMessage?.info.type == 'internal') {
+            expect(txs[2].inMessage.info.bounced).to.be.true
+        }
+        expect((await event.getStartedFinished())[0]).to.be.false
+    })
+
+    it('should not finish event if caller is not oracle', async () => {
+        const event = await Event.create(system, oracle.address, uid++)
+        await event.startEvent(oracle)
+        await system.run()
+        await event.finishEvent(players[0], false)
+        let txs = await system.run()
+        if (txs[2].inMessage?.info.type == 'internal') {
+            expect(txs[2].inMessage.info.bounced).to.be.true
+        }
+        expect(await event.getStartedFinished()).to.eql([true, false])
+    })
 })
