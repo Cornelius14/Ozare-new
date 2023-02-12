@@ -7,9 +7,8 @@ part 'team.freezed.dart';
 @freezed
 class Team with _$Team {
   const factory Team({
-    required String id,
+    required int id,
     required String name,
-    required String code,
     required String country,
     required String logo,
   }) = _Team;

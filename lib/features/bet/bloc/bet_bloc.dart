@@ -5,6 +5,10 @@ import 'package:equatable/equatable.dart';
 import 'package:ozare/features/bet/models/bet.dart';
 import 'package:ozare/features/bet/repository/bet_repository.dart';
 import 'package:collection/collection.dart';
+import 'package:ozare/models/history.dart';
+import 'package:ozare/models/models.dart';
+import 'package:ozare/models/notification.dart';
+import 'package:uuid/uuid.dart';
 
 part 'bet_event.dart';
 part 'bet_state.dart';
@@ -35,7 +39,28 @@ class BetBloc extends Bloc<BetEvent, BetState> {
     if (bet != null) {
       emit(state.copyWith(betStatus: CreateBetStatus.exists));
     } else {
-      await _betRepository.createBet(eventId, event.bet);
+      await _betRepository.createBet(
+        eventId: eventId,
+        bet: event.bet,
+        history: History(
+          id: const Uuid().v4(),
+          team1: event.event.team1,
+          team2: event.event.team2,
+          score1: event.event.score1,
+          score2: event.event.score2,
+          logo1: event.event.logo1,
+          logo2: event.event.logo2,
+          won: 0,
+        ),
+        notification: Notification(
+          id: const Uuid().v4(),
+          title: 'Bet created',
+          body:
+              'You have created a bet for ${event.event.team1} vs ${event.event.team2}',
+          type: 'Bet',
+          date: DateTime.now().toIso8601String(),
+        ),
+      );
       emit(state.copyWith(
           status: BetStatus.success, betStatus: CreateBetStatus.created));
     }

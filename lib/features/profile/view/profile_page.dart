@@ -42,22 +42,22 @@ class _ProfilePageState extends State<ProfilePage> {
           ///
           switch (page) {
             case PPage.profile:
-              return ProfileView(ouser: ouser, page: page);
+              return ProfileView(ouser: ouser, page: page, state: state);
 
             case PPage.settings:
-              return ProfileView(ouser: ouser, page: page);
+              return ProfileView(ouser: ouser, page: page, state: state);
 
             case PPage.editAccount:
-              return ProfileView(ouser: ouser, page: page);
+              return ProfileView(ouser: ouser, page: page, state: state);
 
             case PPage.notifications:
-              return ProfileView(ouser: ouser, page: page);
+              return ProfileView(ouser: ouser, page: page, state: state);
 
             case PPage.wallet:
-              return ProfileView(ouser: ouser, page: page);
+              return ProfileView(ouser: ouser, page: page, state: state);
 
             case PPage.selectLanguage:
-              return ProfileView(ouser: ouser, page: page);
+              return ProfileView(ouser: ouser, page: page, state: state);
           }
         }
         return const Loader(message: 'Loading...');

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ozare/common/utils/utils.dart';
@@ -5,6 +6,7 @@ import 'package:ozare/consts.dart';
 import 'package:ozare/features/auth/bloc/auth_bloc.dart';
 import 'package:ozare/features/auth/widgets/widgets.dart';
 import 'package:ozare/models/ouser.dart';
+import 'package:ozare/translations/locale_keys.g.dart';
 
 import '../../../common/dialogs/dialogs.dart';
 
@@ -43,11 +45,11 @@ class _SignupPageState extends State<SignupPage> {
           child: Column(
             children: [
               SizedBox(height: size.height * 0.04),
-              const Align(
+              Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'Create account',
-                  style: TextStyle(
+                  LocaleKeys.create_account.tr(),
+                  style: const TextStyle(
                     color: Colors.black,
                     fontSize: 32,
                     fontWeight: FontWeight.w600,
@@ -64,20 +66,20 @@ class _SignupPageState extends State<SignupPage> {
                       children: [
                         InputField(
                           controller: firstNameController,
-                          hintText: 'Enter your first name',
-                          labelText: 'First Name',
+                          hintText: LocaleKeys.enter_your_first_name.tr(),
+                          labelText: LocaleKeys.first_name.tr(),
                         ),
                         const SizedBox(height: 16),
                         InputField(
                           controller: lastNameController,
-                          hintText: 'Enter your last name',
-                          labelText: 'Last Name',
+                          hintText: LocaleKeys.enter_your_last_name.tr(),
+                          labelText: LocaleKeys.last_name.tr(),
                         ),
                         const SizedBox(height: 16),
                         InputField(
                           controller: emailController,
-                          hintText: 'Enter your email address',
-                          labelText: 'Email Address',
+                          hintText: LocaleKeys.enter_your_email_address.tr(),
+                          labelText: LocaleKeys.email_address.tr(),
                           textInputType: TextInputType.emailAddress,
                           validator: (val) => Validators.emailValidator(val!),
                           inputFormators: [
@@ -87,8 +89,8 @@ class _SignupPageState extends State<SignupPage> {
                         const SizedBox(height: 16),
                         InputField(
                           controller: passwordController,
-                          hintText: 'Enter your password',
-                          labelText: 'Password',
+                          hintText: LocaleKeys.enter_your_password.tr(),
+                          labelText: LocaleKeys.password.tr(),
                           isPassword: true,
                           maxLines: 1,
                           textInputType: TextInputType.visiblePassword,
@@ -101,8 +103,8 @@ class _SignupPageState extends State<SignupPage> {
                         const SizedBox(height: 16),
                         InputField(
                           controller: confirmPasswordController,
-                          hintText: 'Enter your password again',
-                          labelText: 'Confirm Password',
+                          hintText: LocaleKeys.enter_your_password.tr(),
+                          labelText: LocaleKeys.confirm_password.tr(),
                           isPassword: true,
                           maxLines: 1,
                           validator: (val) =>
@@ -138,15 +140,15 @@ class _SignupPageState extends State<SignupPage> {
                     showSnackBar(context, "All fields are required");
                   }
                 },
-                label: 'Register',
+                label: LocaleKeys.register.tr(),
               ),
               const SizedBox(height: 16),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text(
-                    "Already have an account?",
-                    style: TextStyle(
+                  Text(
+                    LocaleKeys.already_have_an_account.tr(),
+                    style: const TextStyle(
                       color: Colors.black,
                       fontSize: 14,
                     ),
@@ -157,9 +159,9 @@ class _SignupPageState extends State<SignupPage> {
                           .read<AuthBloc>()
                           .add(const AuthLoginPageRequested());
                     },
-                    child: const Text(
-                      'Login',
-                      style: TextStyle(
+                    child: Text(
+                      LocaleKeys.login.tr(),
+                      style: const TextStyle(
                         color: primary2Color,
                         fontSize: 14,
                         fontWeight: FontWeight.w600,

@@ -1,6 +1,10 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:ozare/common/widgets/widgets.dart';
 import 'package:ozare/features/profile/widgets/widgets.dart';
+import 'package:ozare/translations/locale_keys.g.dart';
+
+import 'language_view.dart';
 
 class SettingsView extends StatelessWidget {
   const SettingsView({
@@ -13,56 +17,61 @@ class SettingsView extends StatelessWidget {
         child: SingleChildScrollView(
       child: Column(
         children: [
-          const Heading(heading: 'Personal Info'),
+          Heading(heading: LocaleKeys.personal_info.tr()),
           const SizedBox(height: 8),
           OptionsBox(children: [
             ProfileTile(
-              label: 'Wallet',
+              label: LocaleKeys.wallet.tr(),
               icon: Icons.account_balance_wallet_outlined,
               onTap: () {},
             ),
             ProfileTile(
-              label: 'Statistics',
+              label: LocaleKeys.statistics.tr(),
               icon: Icons.bar_chart_outlined,
               onTap: () {},
             ),
           ]),
           const SizedBox(height: 24),
-          const Heading(heading: 'Settings'),
+          Heading(heading: LocaleKeys.settings.tr()),
           const SizedBox(height: 8),
           OptionsBox(children: [
             ProfileTile(
-              label: 'Notifications',
+              label: LocaleKeys.notifications.tr(),
               icon: Icons.notifications_active_outlined,
               onTap: () {},
             ),
             ProfileTile(
-              label: 'Preferences',
+              label: LocaleKeys.preferences.tr(),
               icon: Icons.settings_outlined,
               onTap: () {},
             ),
             ProfileTile(
-              label: 'Languages',
+              label: LocaleKeys.languages.tr(),
               icon: Icons.language_outlined,
-              onTap: () {},
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const LanguageView()));
+              },
             ),
             ProfileTile(
-              label: 'Log Out',
+              label: LocaleKeys.log_out.tr(),
               icon: Icons.logout_outlined,
               onTap: () {},
             ),
           ]),
           const SizedBox(height: 24),
-          const Heading(heading: 'Support'),
+          Heading(heading: LocaleKeys.support.tr()),
           const SizedBox(height: 8),
           OptionsBox(children: [
             ProfileTile(
-              label: 'Get Help',
+              label: LocaleKeys.get_help.tr(),
               icon: Icons.help_outline,
               onTap: () {},
             ),
             ProfileTile(
-              label: 'FAQ',
+              label: LocaleKeys.faq.tr(),
               icon: Icons.question_answer_outlined,
               onTap: () {},
             ),

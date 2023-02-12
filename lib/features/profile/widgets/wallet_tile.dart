@@ -55,11 +55,11 @@ class WalletTile extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 4),
-                  Icon(
-                    Icons.copy,
-                    color: Colors.grey[600],
-                    size: 16,
-                  ),
+                  // Icon(
+                  //   Icons.copy,
+                  //   color: Colors.grey[600],
+                  //   size: 16,
+                  // ),
                 ],
               ),
             ],
@@ -68,7 +68,7 @@ class WalletTile extends StatelessWidget {
           IconButton(
               onPressed: () {},
               icon: Icon(
-                FontAwesome5.copy,
+                Icons.copy,
                 color: Colors.grey[600]!,
                 size: 22,
               ))

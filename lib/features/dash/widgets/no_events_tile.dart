@@ -25,7 +25,7 @@ class NoEventsTile extends StatelessWidget {
           Icon(
             Icons.sentiment_dissatisfied,
             color: Colors.white,
-            size: 48,
+            size: 36,
           ),
           SizedBox(height: 8),
           Text(
@@ -33,8 +33,8 @@ class NoEventsTile extends StatelessWidget {
             textAlign: TextAlign.center,
             style: TextStyle(
               color: Colors.white,
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
             ),
           ),
         ],
