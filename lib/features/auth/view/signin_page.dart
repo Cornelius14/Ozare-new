@@ -1,4 +1,4 @@
-
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ozare/common/dialogs/show_snackbar.dart';
@@ -6,6 +6,7 @@ import 'package:ozare/common/utils/utils.dart';
 import 'package:ozare/consts.dart';
 import 'package:ozare/features/auth/bloc/auth_bloc.dart';
 import 'package:ozare/features/auth/widgets/widgets.dart';
+import 'package:ozare/translations/locale_keys.g.dart';
 
 class SigninPage extends StatefulWidget {
   const SigninPage({super.key});
@@ -41,33 +42,22 @@ class _SigninPageState extends State<SigninPage> {
                 SizedBox(height: size.height * 0.03),
                 Align(
                   alignment: Alignment.centerLeft,
-                  child: RichText(
-                      text: const TextSpan(
-                    text: 'Let\'s \nGet ',
-                    style: TextStyle(
+                  child: Text(
+                    LocaleKeys.lets_get_started.tr(),
+                    style: const TextStyle(
                       color: Colors.black,
                       fontSize: 32,
                       fontWeight: FontWeight.w600,
                     ),
-                    children: [
-                      TextSpan(
-                        text: 'Started!',
-                        style: TextStyle(
-                          color: primary2Color,
-                          fontSize: 32,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
-                  )),
+                  ),
                 ),
                 SizedBox(height: size.height * 0.06),
 
                 // Email Field
                 InputField(
                   controller: emailController,
-                  hintText: 'Enter your email address',
-                  labelText: 'Email Address',
+                  hintText: LocaleKeys.enter_your_email_address.tr(),
+                  labelText: LocaleKeys.email_address.tr(),
                   isPassword: false,
                   textInputType: TextInputType.emailAddress,
                   inputFormators: [
@@ -78,8 +68,8 @@ class _SigninPageState extends State<SigninPage> {
                 const SizedBox(height: 16),
                 InputField(
                   controller: passwordController,
-                  hintText: 'Enter your password',
-                  labelText: 'Password',
+                  hintText: LocaleKeys.enter_your_password.tr(),
+                  labelText: LocaleKeys.password.tr(),
                   isPassword: true,
                   textInputType: TextInputType.visiblePassword,
                   maxLines: 1,
@@ -89,11 +79,11 @@ class _SigninPageState extends State<SigninPage> {
                 ),
                 const SizedBox(height: 12),
 
-                const Align(
+                Align(
                   alignment: Alignment.centerRight,
                   child: Text(
-                    "Forgot Password?",
-                    style: TextStyle(
+                    LocaleKeys.fogot_password.tr(),
+                    style: const TextStyle(
                       color: primary2Color,
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
@@ -115,7 +105,7 @@ class _SigninPageState extends State<SigninPage> {
                       showSnackBar(context, "All fields are required");
                     }
                   },
-                  label: 'Login',
+                  label: LocaleKeys.login.tr(),
                 ),
                 const SizedBox(height: 16),
 
@@ -129,9 +119,9 @@ class _SigninPageState extends State<SigninPage> {
                       ),
                     ),
                     const SizedBox(width: 8),
-                    const Text(
-                      'Or Continue With',
-                      style: TextStyle(
+                    Text(
+                      LocaleKeys.or_continue_with.tr(),
+                      style: const TextStyle(
                         color: Colors.grey,
                         fontSize: 14,
                       ),
@@ -168,9 +158,9 @@ class _SigninPageState extends State<SigninPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text(
-                      "Don't have an account?",
-                      style: TextStyle(
+                    Text(
+                      LocaleKeys.dont_have_an_account.tr(),
+                      style: const TextStyle(
                         color: Colors.black,
                         fontSize: 14,
                       ),
@@ -181,9 +171,9 @@ class _SigninPageState extends State<SigninPage> {
                             .read<AuthBloc>()
                             .add(const AuthSignupPageRequested());
                       },
-                      child: const Text(
-                        'Register',
-                        style: TextStyle(
+                      child: Text(
+                        LocaleKeys.register.tr(),
+                        style: const TextStyle(
                           color: primary2Color,
                           fontSize: 14,
                           fontWeight: FontWeight.w600,

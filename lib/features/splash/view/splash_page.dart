@@ -1,7 +1,9 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:ozare/consts.dart';
 import 'package:ozare/features/auth/view/auth_page.dart';
+import 'package:ozare/translations/locale_keys.g.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -79,10 +81,12 @@ class _SplashPageState extends State<SplashPage> {
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
                     )),
-                const Text(
-                    "First Social Betting Platform\nOn the TON Blockchain",
+                Text(
+                    LocaleKeys
+                        .first_social_betting_platform_on_the_ton_blockchain
+                        .tr(),
                     textAlign: TextAlign.center,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 16,
                       color: Colors.white,
                       fontWeight: FontWeight.w500,

@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:ozare/consts.dart';
 
 import 'package:ozare/models/models.dart';
@@ -69,16 +70,19 @@ class EventTile extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const SizedBox(height: 12),
-              Text(
-                "${event.score1} : ${event.score2}",
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
+              if (event.score1 != '')
+                Text(
+                  "${event.score1} : ${event.score2}",
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                  ),
                 ),
-              ),
               Text(
-                '${event.time}`',
+                event.score1 != ''
+                    ? '${event.time}`'
+                    : DateFormat.yMd().format(DateTime.parse(event.time)),
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 14,

@@ -17,13 +17,11 @@ import '../widgets/widgets.dart';
 class EventView extends StatefulWidget {
   const EventView({
     super.key,
-    required this.eventId,
     required this.leagueId,
     required this.event,
   });
 
-  final String eventId;
-  final String leagueId;
+  final String? leagueId;
   final Event event;
 
   @override
@@ -42,14 +40,14 @@ class _MatchViewState extends State<EventView> {
       BlocProvider(
         create: (context) => ChatBloc(
           chatRepository: getIt<ChatRepository>(),
-          eventId: widget.eventId,
+          eventId: widget.event.id,
         )..add(ChatSubscriptionRequested()),
         child: const ChatView(),
       ),
       BlocProvider(
         create: (context) => BetBloc(
           betRepository: getIt<BetRepository>(),
-          eventId: widget.eventId,
+          eventId: widget.event.id,
         )..add(const BetSubscriptionRequested()),
         child: BetView(event: widget.event),
       ),
@@ -64,7 +62,7 @@ class _MatchViewState extends State<EventView> {
       body: Column(
         children: [
           UpperSection(
-            eventId: widget.eventId,
+            event: widget.event,
             leagueId: widget.leagueId,
           ),
           const SizedBox(height: 12),
@@ -128,12 +126,12 @@ class _MatchViewState extends State<EventView> {
 class UpperSection extends StatelessWidget {
   const UpperSection({
     super.key,
-    required this.eventId,
     required this.leagueId,
+    required this.event,
   });
 
-  final String eventId;
-  final String leagueId;
+  final String? leagueId;
+  final Event event;
 
   @override
   Widget build(BuildContext context) {
@@ -211,19 +209,21 @@ class UpperSection extends StatelessWidget {
             height: size.height * 0.155,
             width: size.width,
             padding: const EdgeInsets.symmetric(horizontal: 18),
-            child: BlocBuilder<DashBloc, DashState>(
-              builder: (context, state) {
-                final event = state.leagues
-                    .firstWhere(
-                      (league) => league.id == leagueId,
-                    )
-                    .events
-                    .firstWhere((event) => event.id == eventId);
-                return EventTile(
-                  event: event,
-                );
-              },
-            ),
+            child: leagueId == null
+                ? EventTile(event: event)
+                : BlocBuilder<DashBloc, DashState>(
+                    builder: (context, state) {
+                      final updatedEvent = state.leagues
+                          .firstWhere(
+                            (league) => league.id == leagueId!,
+                          )
+                          .events
+                          .firstWhere((e) => e.id == event.id);
+                      return EventTile(
+                        event: updatedEvent,
+                      );
+                    },
+                  ),
           ),
         ),
       ]),

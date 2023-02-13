@@ -25,6 +25,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AuthSignupRequested>(_onAuthSignupRequestedToState);
     on<AuthSignupPageRequested>(_onAuthSignupPageRequestedToState);
     on<AuthLoginPageRequested>(_onAuthLoginPageRequestedToState);
+    on<AuthLogoutRequested>(_onAuthLogoutRequested);
   }
 
   final AuthRepository _authRepository;
@@ -93,6 +94,19 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       }
       emit(const AuthInitial());
     }
+  }
+
+  /// [AuthLogoutRequested] event handler
+  /// This event handler is not async because it does not need to wait for any
+  Future<void> _onAuthLogoutRequested(
+    AuthLogoutRequested event,
+    Emitter<AuthState> emit,
+  ) async {
+    log("🧱 AuthLogoutRequested event handler called ...");
+    emit(const AuthLoading(message: 'Logging out ...'));
+    await _localDBRepository.clearOwner();
+    await _authRepository.signOut();
+    emit(const AuthInitial());
   }
 
   /// [AuthSignupRequested] event handler

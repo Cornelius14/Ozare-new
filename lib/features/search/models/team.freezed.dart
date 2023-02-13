@@ -20,9 +20,8 @@ Team _$TeamFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Team {
-  String get id => throw _privateConstructorUsedError;
+  int get id => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
-  String get code => throw _privateConstructorUsedError;
   String get country => throw _privateConstructorUsedError;
   String get logo => throw _privateConstructorUsedError;
 
@@ -36,7 +35,7 @@ abstract class $TeamCopyWith<$Res> {
   factory $TeamCopyWith(Team value, $Res Function(Team) then) =
       _$TeamCopyWithImpl<$Res, Team>;
   @useResult
-  $Res call({String id, String name, String code, String country, String logo});
+  $Res call({int id, String name, String country, String logo});
 }
 
 /// @nodoc
@@ -54,7 +53,6 @@ class _$TeamCopyWithImpl<$Res, $Val extends Team>
   $Res call({
     Object? id = null,
     Object? name = null,
-    Object? code = null,
     Object? country = null,
     Object? logo = null,
   }) {
@@ -62,14 +60,10 @@ class _$TeamCopyWithImpl<$Res, $Val extends Team>
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as String,
+              as int,
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      code: null == code
-          ? _value.code
-          : code // ignore: cast_nullable_to_non_nullable
               as String,
       country: null == country
           ? _value.country
@@ -89,7 +83,7 @@ abstract class _$$_TeamCopyWith<$Res> implements $TeamCopyWith<$Res> {
       __$$_TeamCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String id, String name, String code, String country, String logo});
+  $Res call({int id, String name, String country, String logo});
 }
 
 /// @nodoc
@@ -103,7 +97,6 @@ class __$$_TeamCopyWithImpl<$Res> extends _$TeamCopyWithImpl<$Res, _$_Team>
   $Res call({
     Object? id = null,
     Object? name = null,
-    Object? code = null,
     Object? country = null,
     Object? logo = null,
   }) {
@@ -111,14 +104,10 @@ class __$$_TeamCopyWithImpl<$Res> extends _$TeamCopyWithImpl<$Res, _$_Team>
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as String,
+              as int,
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      code: null == code
-          ? _value.code
-          : code // ignore: cast_nullable_to_non_nullable
               as String,
       country: null == country
           ? _value.country
@@ -138,18 +127,15 @@ class _$_Team with DiagnosticableTreeMixin implements _Team {
   const _$_Team(
       {required this.id,
       required this.name,
-      required this.code,
       required this.country,
       required this.logo});
 
   factory _$_Team.fromJson(Map<String, dynamic> json) => _$$_TeamFromJson(json);
 
   @override
-  final String id;
+  final int id;
   @override
   final String name;
-  @override
-  final String code;
   @override
   final String country;
   @override
@@ -157,7 +143,7 @@ class _$_Team with DiagnosticableTreeMixin implements _Team {
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'Team(id: $id, name: $name, code: $code, country: $country, logo: $logo)';
+    return 'Team(id: $id, name: $name, country: $country, logo: $logo)';
   }
 
   @override
@@ -167,7 +153,6 @@ class _$_Team with DiagnosticableTreeMixin implements _Team {
       ..add(DiagnosticsProperty('type', 'Team'))
       ..add(DiagnosticsProperty('id', id))
       ..add(DiagnosticsProperty('name', name))
-      ..add(DiagnosticsProperty('code', code))
       ..add(DiagnosticsProperty('country', country))
       ..add(DiagnosticsProperty('logo', logo));
   }
@@ -179,14 +164,13 @@ class _$_Team with DiagnosticableTreeMixin implements _Team {
             other is _$_Team &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.name, name) || other.name == name) &&
-            (identical(other.code, code) || other.code == code) &&
             (identical(other.country, country) || other.country == country) &&
             (identical(other.logo, logo) || other.logo == logo));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, name, code, country, logo);
+  int get hashCode => Object.hash(runtimeType, id, name, country, logo);
 
   @JsonKey(ignore: true)
   @override
@@ -204,20 +188,17 @@ class _$_Team with DiagnosticableTreeMixin implements _Team {
 
 abstract class _Team implements Team {
   const factory _Team(
-      {required final String id,
+      {required final int id,
       required final String name,
-      required final String code,
       required final String country,
       required final String logo}) = _$_Team;
 
   factory _Team.fromJson(Map<String, dynamic> json) = _$_Team.fromJson;
 
   @override
-  String get id;
+  int get id;
   @override
   String get name;
-  @override
-  String get code;
   @override
   String get country;
   @override

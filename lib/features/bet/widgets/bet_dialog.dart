@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ozare/consts.dart';
@@ -153,6 +154,7 @@ class _BetDialogState extends State<BetDialog> {
                               : widget.event.id2,
                           eventId: widget.event.id,
                         ),
+                        widget.event,
                       ),
                     );
                 Navigator.pop(context);
@@ -205,14 +207,16 @@ class TeamTile extends StatelessWidget {
         color: isSelected ? primary1Color : Colors.grey[200],
         borderRadius: BorderRadius.circular(12),
       ),
+      padding: const EdgeInsets.all(4),
       child: Center(
-        child: Text(
+        child: AutoSizeText(
           teamName,
           textAlign: TextAlign.center,
+          maxFontSize: 12,
+          minFontSize: 8,
           style: TextStyle(
             color: isSelected ? Colors.white : Colors.black,
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
+            fontWeight: FontWeight.w500,
           ),
         ),
       ),

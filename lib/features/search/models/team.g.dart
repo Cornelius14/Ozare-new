@@ -7,9 +7,8 @@ part of 'team.dart';
 // **************************************************************************
 
 _$_Team _$$_TeamFromJson(Map<String, dynamic> json) => _$_Team(
-      id: json['id'] as String,
+      id: json['id'] as int,
       name: json['name'] as String,
-      code: json['code'] as String,
       country: json['country'] as String,
       logo: json['logo'] as String,
     );
@@ -17,7 +16,6 @@ _$_Team _$$_TeamFromJson(Map<String, dynamic> json) => _$_Team(
 Map<String, dynamic> _$$_TeamToJson(_$_Team instance) => <String, dynamic>{
       'id': instance.id,
       'name': instance.name,
-      'code': instance.code,
       'country': instance.country,
       'logo': instance.logo,
     };

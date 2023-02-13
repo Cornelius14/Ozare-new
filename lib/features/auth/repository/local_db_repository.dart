@@ -40,6 +40,12 @@ class LocalDBRepository {
     }
     return null;
   }
+
+  // clear user
+  Future<void> clearOwner() async {
+    log("Clearing OUser ...");
+    await _sharedPreferences.remove(SFKeys.user);
+  }
 }
 
 ////////////////////////////////

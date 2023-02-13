@@ -59,13 +59,13 @@ class DashBloc extends Bloc<DashEvent, DashState> {
     DashLeaguesUpdated event,
     Emitter<DashState> emit,
   ) async {
-    if (event.leagues.isEmpty) {
-      // add delay 10 minutes
-      await Future.delayed(const Duration(minutes: 10));
-    } else if (event.leagues.isNotEmpty) {
-      // add delay 30 seconds
-      await Future.delayed(const Duration(seconds: 30));
-    }
+    // if (event.leagues.isEmpty) {
+    //   // add delay 10 minutes
+    //   await Future.delayed(const Duration(minutes: 10));
+    // } else if (event.leagues.isNotEmpty) {
+    //   // add delay 30 seconds
+    //   await Future.delayed(const Duration(seconds: 30));
+    // }
     add(DashLeaguesUpdateRequested(event.leagues, event.category));
   }
 

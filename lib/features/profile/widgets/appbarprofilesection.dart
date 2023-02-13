@@ -1,9 +1,11 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:ozare/common/widgets/widgets.dart';
 import 'package:ozare/consts.dart';
 import 'package:ozare/features/profile/bloc/profile_bloc.dart';
 import 'package:ozare/features/profile/widgets/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ozare/translations/locale_keys.g.dart';
 
 class AppBarProfileSection extends StatelessWidget {
   const AppBarProfileSection({
@@ -29,7 +31,7 @@ class AppBarProfileSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     return SizedBox(
-      height: singlePage ? size.height * 0.115 : size.height * 0.28,
+      height: singlePage ? size.height * 0.125 : size.height * 0.28,
       width: size.width,
       child: Stack(alignment: Alignment.center, children: [
         // App Bar Section
@@ -54,6 +56,7 @@ class AppBarProfileSection extends StatelessWidget {
           right: 0,
           child: Image.asset(
             'assets/images/pattern.png',
+            fit: BoxFit.cover,
             color: Colors.white.withOpacity(0.11),
             width: size.width,
             height: size.height * 0.3,
@@ -119,7 +122,7 @@ class AppBarProfileSection extends StatelessWidget {
             right: 0,
             child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
               PButton(
-                label: 'Account',
+                label: LocaleKeys.account.tr(),
                 icon: Icons.person_outline,
                 onTap: () {
                   context
@@ -142,7 +145,7 @@ class AppBarProfileSection extends StatelessWidget {
                 ),
               ),
               PButton(
-                label: 'Settings',
+                label: LocaleKeys.settings.tr(),
                 icon: Icons.settings_outlined,
                 onTap: () {
                   context
@@ -159,17 +162,17 @@ class AppBarProfileSection extends StatelessWidget {
   String getAppBarTitle() {
     switch (page) {
       case PPage.profile:
-        return 'Profile';
+        return LocaleKeys.profile.tr();
       case PPage.settings:
-        return 'Settings';
+        return LocaleKeys.settings.tr();
       case PPage.editAccount:
-        return 'Edit Account';
+        return LocaleKeys.edit_account.tr();
       case PPage.notifications:
-        return 'Notifications';
+        return LocaleKeys.notifications.tr();
       case PPage.wallet:
-        return 'Wallet';
+        return LocaleKeys.wallets.tr();
       case PPage.selectLanguage:
-        return 'Select Language';
+        return LocaleKeys.select_language.tr();
     }
   }
 }

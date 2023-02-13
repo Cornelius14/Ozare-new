@@ -7,13 +7,11 @@ import 'package:ozare/models/models.dart';
 class EventPage extends StatelessWidget {
   const EventPage({
     super.key,
-    required this.eventId,
     required this.leagueId,
     required this.event,
   });
 
-  final String eventId;
-  final String leagueId;
+  final String? leagueId;
   final Event event;
 
   @override
@@ -24,9 +22,8 @@ class EventPage extends StatelessWidget {
       },
       builder: (context, state) {
         return EventView(
-          eventId: eventId,
-          leagueId: leagueId,
           event: event,
+          leagueId: leagueId,
         );
       },
     );

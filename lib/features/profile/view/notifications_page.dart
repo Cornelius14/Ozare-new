@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:ozare/common/widgets/heading.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ozare/features/profile/bloc/profile_bloc.dart';
 
 import '../widgets/widgets.dart';
 
@@ -13,24 +14,25 @@ class NotificationsPage extends StatelessWidget {
         const AppBarProfileSection.singlePage(
           title: 'Notifications',
         ),
-        Expanded(
-          child: SingleChildScrollView(
-            child: Column(children: [
-              const SizedBox(height: 8),
-              const Heading(heading: 'Today'),
-              const SizedBox(height: 8),
-              ...List.generate(3, (index) => const NotificationTile()),
-              const SizedBox(height: 12),
-              const Heading(heading: 'Yesterday'),
-              const SizedBox(height: 8),
-              ...List.generate(3, (index) => const NotificationTile()),
-              const SizedBox(height: 12),
-              const Heading(heading: 'December 22, 2022'),
-              const SizedBox(height: 8),
-              ...List.generate(3, (index) => const NotificationTile()),
-              const SizedBox(height: 32),
-            ]),
-          ),
+        BlocBuilder<ProfileBloc, ProfileState>(
+          builder: (context, state) {
+            return Expanded(
+              child: state.notifications.isEmpty
+                  ?
+
+                  // If there are no notifications
+                  const Center(
+                      child: Text('No Notifications'),
+                    )
+                  : ListView.builder(
+                      itemCount: state.notifications.length,
+                      itemBuilder: (context, index) {
+                        return NotificationTile(
+                            notification: state.notifications[index]);
+                      },
+                    ),
+            );
+          },
         )
       ],
     );

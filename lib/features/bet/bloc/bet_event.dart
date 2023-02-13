@@ -8,12 +8,13 @@ abstract class BetEvent extends Equatable {
 }
 
 class BetCreated extends BetEvent {
-  const BetCreated(this.bet);
+  const BetCreated(this.bet, this.event);
 
   final Bet bet;
+  final Event event;
 
   @override
-  List<Object> get props => [bet];
+  List<Object> get props => [bet, event];
 }
 
 class BetsUpdated extends BetEvent {
