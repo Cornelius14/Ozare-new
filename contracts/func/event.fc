@@ -48,6 +48,13 @@ slice get_contract_address (cell state_init) inline {
     .end_cell().begin_parse();
 }
 
+int calc_house_edge (int total) inline {
+    if (total < 100000000000) {
+        return (total * 5) / 100;
+    }
+    return (total * 10) / 100;
+}
+
 () recv_internal (int my_balance, int msg_value, cell in_msg_full, slice in_msg_body) impure {
     slice cs = in_msg_full.begin_parse();
     int flags = cs~load_uint(4);
@@ -106,7 +113,7 @@ slice get_contract_address (cell state_init) inline {
 
         if (outcome == winner) {
             ;; player won
-            prize = (amountA + amountB) * amount;
+            prize = (amountA + amountB - calc_house_edge(amountA + amountB)) * amount;
             if (winner == 0) {
                 prize /= amountA;
             } else {
@@ -127,6 +134,18 @@ slice get_contract_address (cell state_init) inline {
         throw_unless(701, equal_slice_bits(sender, oracle));
 
         started = 1;
+
+        ;; house edge payout
+        int house_edge = calc_house_edge(amountA + amountB);
+        if (house_edge > 0) {
+            send_raw_message(begin_cell()
+                .store_uint(0x18, 6)
+                .store_slice(oracle)
+                .store_coins(calc_house_edge(amountA + amountB))
+                .store_uint(0, 1 + 4 + 4 + 64 + 32 + 1 + 1)
+                .store_slice("House edge")
+            .end_cell(), 1);
+        }
 
         ;; cashback
         send_raw_message(begin_cell()

@@ -66,6 +66,34 @@ describe('ozare contracts', () => {
         expect(await event.getStartedFinished()).to.eql([true, false])
     })
 
+    it('should payout house edge to oracle (5%)', async () => {
+        const event = await Event.create(system, oracle.address, uid++)
+        await event.bet(players[0], false, toNano('50'))
+        await system.run()
+        await event.startEvent(oracle)
+        let txs = await system.run()
+
+        expect(txs).to.have.lengthOf(4)
+        if (txs[2].inMessage?.info.type == 'internal') {
+            expect(txs[2].inMessage.info.dest.toRawString()).to.equal(oracle.address.toRawString())
+            expect(txs[2].inMessage.info.value.coins).to.equal(toNano('2.5'))
+        }
+    })
+
+    it('should payout house edge to oracle (10%)', async () => {
+        const event = await Event.create(system, oracle.address, uid++)
+        await event.bet(players[0], false, toNano('100'))
+        await system.run()
+        await event.startEvent(oracle)
+        let txs = await system.run()
+
+        expect(txs).to.have.lengthOf(4)
+        if (txs[2].inMessage?.info.type == 'internal') {
+            expect(txs[2].inMessage.info.dest.toRawString()).to.equal(oracle.address.toRawString())
+            expect(txs[2].inMessage.info.value.coins).to.equal(toNano('10'))
+        }
+    })
+
     it('should finish event', async () => {
         const event = await Event.create(system, oracle.address, uid++)
         await event.startEvent(oracle)
@@ -195,7 +223,7 @@ describe('ozare contracts', () => {
         if (txs[3].inMessage?.info.type == 'internal') {
             expect(txs[3].inMessage.info.bounced).to.be.false
             expect(txs[3].inMessage.info.dest.toRawString()).to.equal(players[1].address.toRawString())
-            expect(Number(txs[3].inMessage.info.value.coins)).to.be.approximately(3.6e9, 0.1e9)
+            expect(Number(txs[3].inMessage.info.value.coins)).to.be.approximately(3.5e9, 0.1e9)
         }
     })
 
