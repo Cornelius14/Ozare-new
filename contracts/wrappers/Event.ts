@@ -1,9 +1,22 @@
-import { Address, beginCell, Cell, Contract, contractAddress, Sender, toNano, TupleItem } from 'ton-core'
-import { compileFunc } from '@ton-community/func-js'
+import { compileFunc } from '@ton-community/func-js';
 import { readFileSync } from 'fs';
-import { Bet } from './Bet'
-import { ContractExecutor, ContractSystem } from 'ton-emulator';
 import { TonClient } from 'ton';
+import {
+  Address,
+  beginCell,
+  Cell,
+  Contract,
+  contractAddress,
+  Sender,
+  toNano,
+  TupleItem,
+} from 'ton-core';
+import {
+  ContractExecutor,
+  ContractSystem,
+} from 'ton-emulator';
+
+import { Bet } from './Bet';
 
 export class Event implements Contract {
     readonly address: Address
@@ -58,7 +71,7 @@ export class Event implements Contract {
             value: toNano('0.05'),
             body: beginCell()
                 .storeUint(0x380ce405, 32)
-            .endCell()
+                .endCell()
         })
     }
 
@@ -68,9 +81,9 @@ export class Event implements Contract {
             init: this.init,
             value: toNano('0.05'),
             body: beginCell()
-                .storeUint(0x54a94f2a, 32)
-                .storeBit(winner)
-            .endCell()
+                    .storeUint(0x54a94f2a, 32)
+                    .storeBit(winner)
+                    .endCell()
         })
     }
 
@@ -102,7 +115,7 @@ export class Event implements Contract {
     static async getCode (): Promise<Cell> {
         let result = await compileFunc({
             targets: ['stdlib.fc', 'opcodes.fc', 'event.fc'],
-            sources: (path) => readFileSync('func/' + path).toString()
+            sources: (path: string) => readFileSync('func/' + path).toString()
         })
         if (result.status === 'error') {
             throw(result.message)
