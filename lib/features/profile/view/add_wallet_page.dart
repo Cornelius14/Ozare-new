@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
+import 'package:ozare/common/dialogs/alert_dialog.dart';
 import 'package:uni_links/uni_links.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -134,9 +136,15 @@ class WalletSelector extends StatelessWidget {
           // var url = Uri.parse(
           //     'https://tonapi.io/login?return_url=intent://maltapark.com/#Intent;scheme=TESTSCHEME;package=com.example.ozare;end');
           var url = Uri.parse(
-              'https://tonapi.io/login?return_url=https://ton-auth.com');
+              'https://tonapi.io/login?return_url=https://ozare.page.link/walletAuth');
           if (await canLaunchUrl(url)) {
             launchUrl(url, mode: LaunchMode.externalApplication);
+            FirebaseDynamicLinks.instance.onLink.listen((dynamicLinkData) {
+              showAlertDialog(context: context, title: 'Success', content: 'Wallet connected successfully');
+              print(dynamicLinkData.link.toString());
+            }).onError((error) {
+              // Handle errors
+            });
           }
         }
       },

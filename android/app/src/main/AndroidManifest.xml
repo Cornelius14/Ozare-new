@@ -48,8 +48,8 @@
                 android:path="/"
                 android:scheme="TESTSCHEME" /> -->
 
-                <data android:scheme="http" android:host="ton-auth.com" />
-                <data android:scheme="https" />
+<!--                <data android:scheme="http" android:host="ton-auth.com" />-->
+                <data android:scheme="https" android:host="ozare.page.link" />
             </intent-filter>
 
 
