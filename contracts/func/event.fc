@@ -174,14 +174,14 @@ int calc_house_edge (int total) inline {
     save_data(uid, oracle, amountA, amountB, started, finished, winner, bet_code);
 }
 
-[int, int] get_total_bets () method_id {
+(int, int) get_total_bets () method_id {
     (_, _, int amountA, int amountB, _, _, _, _) = load_data();
-    return [amountA, amountB];
+    return (amountA, amountB);
 }
 
-[int, int] get_started_finished () method_id {
+(int, int) get_started_finished () method_id {
     (_, _, _, _, int started, int finished, _, _) = load_data();
-    return [started, finished];
+    return (started, finished);
 }
 
 int get_winner () method_id {
