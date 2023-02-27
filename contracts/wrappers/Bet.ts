@@ -10,14 +10,20 @@ import {
 import { compileFunc } from '@ton-community/func-js';
 import { readFileSync } from 'fs';
 import { ContractExecutor } from 'ton-emulator';
+import { TonClient } from 'ton';
 
 export class Bet implements Contract {
     readonly address: Address;
     readonly executor?: ContractExecutor;
+    readonly client?: TonClient;
 
-    constructor(address: Address, executor?: ContractExecutor) {
+    constructor(address: Address, executor: ContractExecutor | TonClient) {
         this.address = address;
-        this.executor = executor;
+        if ('get' in executor) {
+            this.executor = executor;
+        } else {
+            this.client = executor;
+        }
     }
 
     async close(via: Sender) {
@@ -32,8 +38,13 @@ export class Bet implements Contract {
         method: string,
         stack?: TupleItem[] | undefined
     ) {
-        var res = await this.executor!.get(method);
-        if (!res.success) throw res.error;
+        var res;
+        if (this.executor) {
+            res = await this.executor.get(method);
+            if (!res.success) throw res.error;
+        } else {
+            res = await this.client!.callGetMethod(this.address, method, stack);
+        }
         return res.stack;
     }
 
